@@ -1,0 +1,186 @@
+router.post("/login", loginController);
+/* 👀 soft delete veri durur gizlenir /hard delete DB den silinir gelmez Kullanıcı yanlışlıkla siler Müşteri “geri al” derAudit / log gerekir  */
+/*  modele ekleme*/
+const userSchema = new mongoose.Schema({
+  email: String,
+  password: String,
+  isDeleted: {
+    type: Boolean,
+    default: false
+  }
+});
+/*  getlerde filtreleme yapılmasa soft delete bos*/
+const users = await User.find({ isDeleted: false });
+/* delete endonpint  silindi sanılır ama DB dedir*/
+exports.deleteUser = async (req, res) => {
+  await User.findByIdAndUpdate(req.params.id, {
+    isDeleted: true
+  });
+
+  res.json({ message: "User deleted" });
+};
+/* admin için geri alma şaş admin paneli mantik*/
+exports.restoreUser,isDeleted: false,({ message: "User restored".
+/* tarihle soft delete audith log*/
+deletedAt: {
+  type: Date,
+  default: null
+}
+/*  */
+deletedAt: new Date()
+/*  */
+/* Enum izin verilen roller email pasword role{ */
+/* auth mildwareJWT’den user info geliyorrole kontrol */
+req.user = {
+  userId: decoded.id,
+  role: decoded.role
+};
+/*routa gerçek kulanim  sadece admin girebilir*/
+router.delete(
+  "/users/:id",
+  auth,
+  roleCheck(["admin"]),
+  deleteUser
+);
+/* hem admin hem user girebilir */
+router.get(
+  "/profile",
+  auth,
+  roleCheck(["admin", "user"]),
+  getProfile
+);
+/* kontroller temiz kalir 📌 Yetki kontrolü route’taontroller sade*/
+exports.deleteUser = async (req, res) => {
+  res.json({ message: "User deleted" });
+};
+/* role check mildware reusuble tekrar kulanilir */
+const roleCheck = (roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({
+        message: "Access denied"
+      });
+    }
+    next();
+  };
+};
+
+module.exports = roleCheck;
+/*  background jobs arka plan işleri Email gönderme (register, reset password)
+🔔 Notification📄 PDF / invoice oluşturma🖼️ Image resize🧹 Eski kayıt temizleme📊 Rapor oluşturma  */
+/* Queue işler sirayla,worker arkada çalişir */
+API (Express),Queue (Redis),Worke,rEmail / PDF / Notification
+/* GERÇEK ÖRNEK: REGISTER + EMAIL
+Senaryo:Kullanıcı kayıt oldu“Hoş geldin” maili gidecekAma API beklemeyecek */
+/* Queue oluşturma gerçak prod //queus/emai.qoueu */
+const Queue = repuied("bull");
+
+const QoueuEmail = new Queue("QeueEmail");
+module.export = QueueEmail;
+/* controler  job ekleme api aninda cevap verir mail arkada gider */
+const emailQueue = rephuied(".../queues/emails.queue");
+export.register = async (req,res)=> {
+/* user db ye kaydedildi varsayilan */
+    await emailQueue.add({
+        email:req.body.email,
+        type"welcome"
+    });
+    res.status(201).json({mesage:"user crated"});
+};
+/* //workers/email.worker.js api değil ayri podcess  */
+const emailQueue = repuied(".../queus/email.queue");
+emailQueue.process(async(job)=>{
+    const {email,type} = job.data;
+    if(type === "welcome") {
+        console.log("sanding welcome to email ${email}");
+    }
+});
+/*gerçek projede nodemailer//provider */
+/*cacheng redis Prod’da Redis ayrı servis olur Mantık değişmez /// */
+const redis = require("redis");
+
+const redisClient = redis.createClient();
+
+redisClient.connect();
+
+module.exports = redisClient;
+
+/*  endpoint 50.000 ürün
+Her kullanıcı sayfa yeniliyor Her seferinde DB legidiliyor*/
+GET /products
+/* redis olmadan  Her istek → DB 1000 kullanıcı → 1000 DB sorgusu*/
+exports.getProducts = async (req, res) => {
+  const products = await Product.find();
+  res.json(products);
+};
+/* prod çözüm mantık  */
+İstek gelir
+↓Redis'te var mı? EVET → Redis'ten dönHAYIR → DB → Redis'e yaz → dön
+/* cache temizleme ürün eklendi silindi cache geçici veri değişince silinir */
+await redisClient.del("products:all");
+/* cacheli kontroller  İlk istek → DB Sonraki 60 saniye → Redis DB rahatlar*/
+const redisClient = require("../config/redis");
+
+exports.getProducts = async (req, res) => {
+  const cacheKey = "products:all";
+
+  const cachedData = await redisClient.get(cacheKey);
+
+  if (cachedData) {
+    return res.json(JSON.parse(cachedData));
+  }
+
+  const products = await Product.find();
+
+  await redisClient.setEx(
+    cacheKey,
+    60, // 60 saniye
+    JSON.stringify(products)
+  );
+
+  res.json(products);
+};
+/*hata ne zaman oldu kim yapti logging hangi endonpint  */
+WİNSTON/PİNO
+/*DATABESE CHECK index warmi pagination varmi  */
+.FİND()
+.limit(20)
+.skip(page*20)
+/* backend depolay  cloud port verir uyulmasi zorunda */
+app.listen(process.env.Port);
+/*  PANELDEN GİRİLİR CLOUDA KOD GÖRMEZ ENV GÖRÜR*/
+env.
+MONGO_URİ=
+JWT_SECRET=
+REDİS_URL
+/* DEBOLAY PLATFORM MANTİĞİ RENDER RAİLWY GİTHUBA BAĞLANİR npm instal npm start düzgünse eğer yazi*/
+"scripts":{
+    "start":"node js.server"
+}
+/* producton hatalari nasil görünür stack trace kulaniciya gitmez log panelde görünür */
+console.error(err)
+/* heath check cloud bunu kulanir ayaktami çöktümü */
+app.get("/heath",(req,res) => {
+    res.json({status:"ok"});
+});
+/* proud kalan konuyar//versingong = client bozulmaz  */
+/api/vi/users,/api/v2/users /* ratelyimitdede "/api"var */
+/* gracehul shotdown depolay sirasinda repuest yarim kalmaz producton inceliği */
+process.on("SEGTREM", ()=>{
+    server.close( ()=>{
+        console.log("server kapandi");
+    });
+});
+BACKUP STRATEJİSİ (HAYAT KURTARIR)
+Gerçek:
+DB silinir
+Hata olur
+İnsan hatası olur
+Production’da:
+Mongo Atlas → otomatik backup
+Render / Railway → DB ayrı tutulur
+📌 Senin bilmen gereken:
+“DB backup’ı platform sağlar, ben farkında olurum.”
+/*  */
+
+
